@@ -1,12 +1,12 @@
-import json
 import boto3
 import time
+import json
 from datetime import datetime, timedelta
+from urllib.parse import urlparse
 import requests
 import warnings
 import os
 import csv
-from urllib.parse import urlparse
 
 # Suppress all warnings
 warnings.filterwarnings("ignore")
@@ -18,7 +18,7 @@ def send_to_splunk_hec(event_payload):
     
     payload = {
         "event": json.dumps(event_payload),
-        "sourcetype": "_json/<<SOURCETYPE OF YOUR CHOICE>>",
+        "sourcetype": "<<SOURCETYPE OF YOUR CHOICE>>",
         "index": "<<INDEXNAME>>",
         "source": "<<SOURCENAME>>",
         "host": "<<HOSTNAME>>"
@@ -239,12 +239,12 @@ def lambda_handler(event, context):
             message_to_post = 'lambda failed in query the view phase'
             post_to_webhook(message_to_post)
     #******************************************************************************************************************************************************************
-    # Giving 7 seconds sleep before cleanup process starts
+    # Giving 5 seconds sleep before cleanup process starts
     #******************************************************************************************************************************************************************     
-    print("Sleeping for 7 seconds before termination process")
-    time.sleep(7)
+    print("Sleeping for 5 seconds before termination process")
+    time.sleep(5)
     tempSleep = 'completed'
-    print("7 seconds sleep completed")
+    print("5 seconds sleep completed")
     #******************************************************************************************************************************************************************
     # Define the Athena query to delete the view
     #******************************************************************************************************************************************************************            
@@ -284,5 +284,5 @@ def lambda_handler(event, context):
                         message_to_post = 'lambda execution completed successfully'
                         post_to_webhook(message_to_post)
         except:
-            message_to_post = 'lambda failed in delete table phase. Not a big deal. Please cleanup later from console'
+            message_to_post = 'lambda failed in delete table phase.'
             post_to_webhook(message_to_post)            
